@@ -3,7 +3,7 @@
 __pycache__/
 .vscode/
 .idea/
-
+README.md
 /data/*
 /checkpoints/
 /debugging.ipynb
