@@ -150,8 +150,8 @@ class Dataset(object):
         self.pairs = []
         self.src_len = 0
         self.tgt_len = 0
-        if filename.endswith('.gz'):
-            open = gzip.open
+        # if filename.endswith('.gz'):
+        #     open = gzip.open
         with open(filename, 'rt', encoding='utf-8') as f:
             for i, line in enumerate(f):
                 pair = line.strip().split('\t')
