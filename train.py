@@ -192,41 +192,41 @@ def train(train_generator, vocab: Vocab, model: Seq2Seq, params: Params, valid_g
                   params.model_path_prefix)
 
 
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description='Train the seq2seq abstractive summarizer.')
-    parser.add_argument('--resume_from', type=str, metavar='R',
-                        help='path to a saved training status (*.train.pt)')
-    args, unknown_args = parser.parse_known_args()
-
-    if args.resume_from:
-        print("Resuming from %s..." % args.resume_from)
-        train_status = torch.load(args.resume_from)
-        m = torch.load('%s.%02d.pt' % (args.resume_from[:-9], train_status['epoch']))
-        p = train_status['params']
-    else:
-        p = Params()
-        m = None
-        train_status = None
-
-    if unknown_args:  # allow command line args to override params.py
-        p.update(unknown_args)
-
-    dataset = Dataset(p.data_path, max_src_len=p.max_src_len, max_tgt_len=p.max_tgt_len,
-                      truncate_src=p.truncate_src, truncate_tgt=p.truncate_tgt)
-    if m is None:
-        v = dataset.build_vocab(p.vocab_size, embed_file=p.embed_file)
-        m = Seq2Seq(v, p)
-    else:
-        v = dataset.build_vocab(p.vocab_size)
-
-    train_gen = dataset.generator(p.batch_size, v, v, True if p.pointer else False)
-    if p.val_data_path:
-        val_dataset = Dataset(p.val_data_path, max_src_len=p.max_src_len, max_tgt_len=p.max_tgt_len,
-                              truncate_src=p.truncate_src, truncate_tgt=p.truncate_tgt)
-        val_gen = val_dataset.generator(p.val_batch_size, v, v, True if p.pointer else False)
-    else:
-        val_gen = None
-
-    train(train_gen, v, m, p, val_gen, train_status)
+# if __name__ == "__main__":
+#     import argparse
+#
+#     parser = argparse.ArgumentParser(description='Train the seq2seq abstractive summarizer.')
+#     parser.add_argument('--resume_from', type=str, metavar='R',
+#                         help='path to a saved training status (*.train.pt)')
+#     args, unknown_args = parser.parse_known_args()
+#
+#     if args.resume_from:
+#         print("Resuming from %s..." % args.resume_from)
+#         train_status = torch.load(args.resume_from)
+#         m = torch.load('%s.%02d.pt' % (args.resume_from[:-9], train_status['epoch']))
+#         p = train_status['params']
+#     else:
+#         p = Params()
+#         m = None
+#         train_status = None
+#
+#     if unknown_args:  # allow command line args to override params.py
+#         p.update(unknown_args)
+#
+#     dataset = Dataset(p.data_path, max_src_len=p.max_src_len, max_tgt_len=p.max_tgt_len,
+#                       truncate_src=p.truncate_src, truncate_tgt=p.truncate_tgt)
+#     if m is None:
+#         v = dataset.build_vocab(p.vocab_size, embed_file=p.embed_file)
+#         m = Seq2Seq(v, p)
+#     else:
+#         v = dataset.build_vocab(p.vocab_size)
+#
+#     train_gen = dataset.generator(p.batch_size, v, v, True if p.pointer else False)
+#     if p.val_data_path:
+#         val_dataset = Dataset(p.val_data_path, max_src_len=p.max_src_len, max_tgt_len=p.max_tgt_len,
+#                               truncate_src=p.truncate_src, truncate_tgt=p.truncate_tgt)
+#         val_gen = val_dataset.generator(p.val_batch_size, v, v, True if p.pointer else False)
+#     else:
+#         val_gen = None
+#
+#     train(train_gen, v, m, p, val_gen, train_status)

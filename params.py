@@ -3,9 +3,9 @@ from typing import Optional, Union, List
 
 class Params:
     # Model architecture
-    vocab_size: int = 30000
-    hidden_size: int = 150  # of the encoder; default decoder size is doubled if encoder is bidi
-    dec_hidden_size: Optional[int] = 200  # if set, a matrix will transform enc state into dec state
+    vocab_size: int = 50000
+    hidden_size: int = 256  # of the encoder; default decoder size is doubled if encoder is bidi
+    dec_hidden_size: Optional[int] = 512  # if set, a matrix will transform enc state into dec state
     embed_size: int = 100
     enc_bidi: bool = True
     enc_attn: bool = True  # decoder has attention over encoder states?
@@ -21,10 +21,10 @@ class Params:
     show_cover_loss: bool = False  # include coverage loss in the loss shown in the progress bar?
 
     # Regularization
-    enc_rnn_dropout: float = 0
-    dec_in_dropout: float = 0
-    dec_rnn_dropout: float = 0
-    dec_out_dropout: float = 0
+    enc_rnn_dropout: float = 0.2
+    dec_in_dropout: float = 0.2
+    dec_rnn_dropout: float = 0.2
+    dec_out_dropout: float = 0.2
 
     # Training
     optimizer: str = 'adam'  # adam or adagrad
@@ -38,16 +38,16 @@ class Params:
     n_val_batches: int = 100  # how many validation batches per epoch
     n_epochs: int = 75
     pack_seq: bool = True  # use packed sequence to skip PAD inputs?
-    forcing_ratio: float = 0.75  # initial percentage of using teacher forcing
+    forcing_ratio: float = 0.25  # initial percentage of using teacher forcing
     partial_forcing: bool = True  # in a seq, can some steps be teacher forced and some not?
     forcing_decay_type: Optional[str] = 'exp'  # linear, exp, sigmoid, or None
     forcing_decay: float = 0.9999
     sample: bool = True  # are non-teacher forced inputs based on sampling or greedy selection?
     grad_norm: float = 1  # use gradient clipping if > 0; max gradient norm
     # note: enabling reinforcement learning can significantly slow down training
-    rl_ratio: float = 0  # use mixed objective if > 0; ratio of RL in the loss function
+    rl_ratio: float = 0.5  # use mixed objective if > 0; ratio of RL in the loss function
     rl_ratio_power: float = 1  # increase rl_ratio by **= rl_ratio_power after each epoch; (0, 1]
-    rl_start_epoch: int = 1  # start RL at which epoch (later start can ensure a strong baseline)?
+    rl_start_epoch: int = 3  # start RL at which epoch (later start can ensure a strong baseline)?
 
     # Data
     embed_file: Optional[str] = 'data/.vector_cache/glove.6B.100d.txt'  # use pre-trained embeddings
@@ -60,12 +60,14 @@ class Params:
 
     # Saving model automatically during training
     model_path_prefix: Optional[str] = 'checkpoints/cnndm05'
-    keep_every_epoch: bool = False  # save all epochs, or only the best and the latest one?
+    keep_every_epoch: bool = True  # save all epochs, or only the best and the latest one?
 
     # Testing
     beam_size: int = 4
-    min_out_len: int = 60
-    max_out_len: Optional[int] = 100
+
+
+    min_out_len: int = 80
+    max_out_len: Optional[int] = 120
     out_len_in_words: bool = False
     test_data_path: str = 'data/cnndm.test.gz'
     test_sample_ratio: float = 1  # what portion of the test data is used? (1 for all data)
