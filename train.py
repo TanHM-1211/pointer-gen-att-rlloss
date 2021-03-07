@@ -58,12 +58,14 @@ def train_batch(batch: Batch, model: Seq2Seq, criterion, optimizer, *,
 
 
 def train(train_generator, vocab: Vocab, model: Seq2Seq, params: Params, valid_generator=None,
-          saved_state: dict = None):
+          saved_state: dict = None, losses=None):
     # variables for plotting
     plot_points_per_epoch = max(math.log(params.n_batches, 1.6), 1.)
     plot_every = round(params.n_batches / plot_points_per_epoch)
-    plot_losses, cached_losses = [], []
-    plot_val_losses, plot_val_metrics = [], []
+    if losses is None:
+        plot_losses, cached_losses, plot_val_losses, plot_val_metrics = [], [], [], []
+    else:
+        plot_losses, cached_losses, plot_val_losses, plot_val_metrics = losses
 
     total_parameters = sum(parameter.numel() for parameter in model.parameters()
                            if parameter.requires_grad)
@@ -182,7 +184,11 @@ def train(train_generator, vocab: Vocab, model: Seq2Seq, params: Params, valid_g
                 'valid_avg_metric': valid_avg_metric,
                 'best_epoch_so_far': best_epoch_id,
                 'params': params,
-                'optimizer': optimizer
+                'optimizer': optimizer,
+                'train_loss': plot_losses,
+                'cached_losses': cached_losses,
+                'val_loss': plot_val_losses,
+                'plot_val_metrics': plot_val_metrics
             }, '%s.train.pt' % params.model_path_prefix)
 
         if rl_ratio > 0:
