@@ -67,9 +67,9 @@ def train(train_generator, vocab: Vocab, model: Seq2Seq, params: Params, valid_g
     else:
         plot_losses, cached_losses, plot_val_losses, plot_val_metrics = losses
 
-    total_parameters = sum(parameter.numel() for parameter in model.parameters()
-                           if parameter.requires_grad)
-    print("Training %d trainable parameters..." % total_parameters)
+    # total_parameters = sum(parameter.numel() for parameter in model.parameters()
+    #                        if parameter.requires_grad)
+    # print("Training %d trainable parameters..." % total_parameters)
     model.to(DEVICE)
     if saved_state is None:
         if params.optimizer == 'adagrad':
